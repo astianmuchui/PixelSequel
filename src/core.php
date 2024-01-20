@@ -1,9 +1,10 @@
 <?php
 
+namespace PixelSequel;
 
 
 /**
-* 
+*
 * @package  PixelSequel ORM
 * @description  PixelSequel ORM is a lightweight ORM for PHP
 * @version  1.0.0
@@ -12,8 +13,9 @@
 * @author Sebastian Muchui
 * @subpackage core
 * @category ORMs
+*
 */
-namespace PixelSequel;
+
 
 /** Enable debug: Remove this in production */
 ini_set('display_errors', 'On');
@@ -23,11 +25,30 @@ use PDO, PDOException, PDOStatement;
 
 interface PixelSequelORM
 {
-
+    public function connect(): PDO | bool;
+    public function query(mixed $sql): PDOStatement;
+    public static function Insert(mixed $table, array $data): bool;
+    public static function Update(mixed $table, mixed $param_t = "id", mixed $param_n, array $data): bool;
+    public static function All(mixed $table, mixed $order_by="", mixed $order=""): array | object;
+    public static function Find(mixed $table, mixed $param_t="id", mixed $param_n, mixed $order_by = "",string $order=""): array;
+    public static function Search(mixed $table, mixed $param_t="id", mixed $param_n, mixed $order_by = "", mixed $order=""): array;
+    public static function Delete(mixed $table, mixed $param_t="id", mixed $param_n): bool;
+    public static function DeleteAll(mixed $table): bool;
+    public static function Disconnect(): void;
 }
 
 class Model implements PixelSequelORM
 {
+
+    /**
+     * @uname: username
+     * @pwd: password
+     * @host: host
+     * @conn: connection
+     * @db: database
+     * @Connected: connection status
+     * @connection: connection object
+    */
 
     public $uname;
     public $user;
@@ -47,7 +68,7 @@ class Model implements PixelSequelORM
      * @defaults: 
     */
 
-    public function __construct($uname = "root", $pwd = "", $host = "localhost", $db)
+    public function __construct(mixed $uname = "root", mixed $pwd = "", mixed $host = "localhost", mixed $db)
     {
         $this->uname = $uname;
         $this->pwd = $pwd;
@@ -73,8 +94,10 @@ class Model implements PixelSequelORM
             $this->conn = new PDO("mysql:host=$this->host;dbname=$this->db", $this->uname, $this->pwd);
             $this->conn->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_OBJ);
             $this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
             self::$connection = $this->conn;
             self::$Connected = true;
+
             return ($this->conn) || false;
         }
         catch (PDOException $e)
@@ -89,10 +112,62 @@ class Model implements PixelSequelORM
      * @return PDOStatement
     */
 
-    public function query($sql): PDOStatement
+    public function query(mixed $sql): PDOStatement
     {
         return $this->conn->query($sql);
     }
+
+    /**
+     * @Insert: insert record into table
+     * @param string $table: table name
+     * @param array $data: data to be inserted
+     */
+
+    public static function Insert(mixed $table, array $data): bool
+    {
+        $sql = "INSERT INTO `$table` (";
+        $sql .= implode(", ", array_keys($data)) . ') VALUES (';
+        $sql .= ":" . implode(", :", array_keys($data)) . ')';
+
+        $stmt = self::$connection->prepare($sql);
+
+        foreach ($data as $key => $value)
+        {
+            $stmt->bindValue(":$key", $value);
+        }
+
+        return $stmt->execute();
+    }
+
+    /**
+     * @Update: update record from table
+     * @param string $table: table name
+     * @param string $param_t: parameter type
+     * @param string $param_n: parameter name
+     * @param array $data: data to be inserted
+    */
+
+    public static function Update(mixed $table, mixed $param_t = "id", mixed $param_n, array $data): bool
+    {
+        /**
+          * Update $table SET $data WHERE $param_t = $param_n
+        */
+    /**
+     * @Create: create record from table
+     * @param string $table: table name
+     * @param array $data: data to be inserted
+     * @return bool
+    */
+
+        $sql = "UPDATE `$table` SET ";
+        $sql .= implode(" = ?, ", array_keys($data)) . " = ? ";
+        $sql .= "WHERE `$param_t` = '$param_n'";
+        $stmt = self::$connection->prepare($sql);
+        $stmt->execute(array_values($data));
+        return (true);
+
+    }
+
 
     /**
      * @All: get all records from table
@@ -100,9 +175,43 @@ class Model implements PixelSequelORM
      * @return array
      */
 
-    public static function All($table): array | object
+    public static function All(mixed $table, mixed $order_by="", mixed $order=""): array | object
     {
-        $sql = "SELECT * FROM $table";
+        if ($order_by == "")
+        {
+            $sql = "SELECT * FROM `$table`";
+        }
+        else
+        {
+            $sql = "SELECT * FROM `$table` ORDER BY `$order_by` $order";
+        }
+
+        $stmt = self::$connection->query($sql);
+        $stmt->execute();
+
+        return $stmt->fetchAll();
+    }
+
+    /**
+     * @FetchN: fetch N records from table
+     * @param string $table: table name
+     * @param string $param_t: parameter type
+     * @param string $param_n: parameter name
+     * @param int $limit: limit
+     * @return array
+    */
+
+    public function FetchN(mixed $table, mixed $param_t="id", mixed $param_n, int $limit, mixed $order_by="" , string $order=""): array | object
+    {
+        if ($order_by == "")
+        {
+            $sql = "SELECT * FROM `$table` WHERE `$param_t` = $param_n LIMIT $limit";
+        }
+        else
+        {
+            $sql = "SELECT * FROM `$table` WHERE `$param_t` = $param_n ORDER BY `$order_by` $order LIMIT $limit";
+        }
+
         $stmt = self::$connection->query($sql);
         $stmt->execute();
         return $stmt->fetchAll();
@@ -116,9 +225,17 @@ class Model implements PixelSequelORM
      * @return array
     */
 
-    public static function Find($table, $param_t="id", $param_n): array
+    public static function Find(mixed $table, mixed $param_t="id", mixed $param_n, mixed $order_by = "",string $order=""): array
     {
-        $sql = "SELECT * FROM `$table` WHERE `$param_t` = $param_n";
+        if ($order_by == "")
+        {
+            $sql = "SELECT * FROM `$table` WHERE `$param_t` = $param_n";
+        }
+        else
+        {
+            $sql = "SELECT * FROM `$table` WHERE `$param_t` = $param_n ORDER BY `$order_by` $order";
+        }
+
         $stmt = self::$connection->query($sql);
         $stmt->execute();
         return $stmt->fetchAll();
@@ -132,49 +249,64 @@ class Model implements PixelSequelORM
      * @return array
     */
 
-    public static function Search($table, $param_t="id", $param_n): array
+    public static function Search(mixed $table, mixed $param_t="id", mixed $param_n, mixed $order_by = "", mixed $order=""): array
     {
-        $sql = "SELECT * FROM `$table` WHERE `$param_t` LIKE '%$param_n%' ";
+        if ($order_by == "")
+        {
+            $sql = "SELECT * FROM `$table` WHERE `$param_t` LIKE '%$param_n%'";
+        }
+        else
+        {
+            $sql = "SELECT * FROM `$table` WHERE `$param_t` LIKE '%$param_n%' ORDER BY `$order_by` $order";
+        }
+
         $stmt = self::$connection->query($sql);
         $stmt->execute();
         return $stmt->fetchAll();
     }
 
     /**
-     * @Create: create record from table
+     * @Delete: delete record from table
      * @param string $table: table name
-     * @param array $data: data to be inserted
+     * @param string $param_t: parameter type
+     * @param string $param_n: parameter name
      * @return bool
     */
 
-    public function disconnect(): void
+    public static function Delete(mixed $table, mixed $param_t="id", mixed $param_n): bool
     {
-        unset($this->conn);
+            $sql = "DELETE FROM `$table` WHERE `$param_t` = '$param_n'";
+            $stmt = self::$connection->query($sql);
+            $stmt->execute();
+            return true;
+    }
+
+    /**
+     * @DeleteAll: delete all records from table
+     * @param string $table: table name
+     * @return bool
+    */
+
+    public static function DeleteAll(mixed $table): bool
+    {
+            $sql = "DELETE FROM `$table`";
+            $stmt = self::$connection->query($sql);
+            $stmt->execute();
+            return true;
+    }
+
+    /**
+     * @Disconnect: disconnect from database
+     * @param void
+     * @return void
+     */
+
+    public static function Disconnect(): void
+    {
         self::$connection = null;
         self::$Connected = false;
     }
 }
 
-/**
- * @function test_ORM: test function
- * @param void
- * @return void
- */
 
-function test_ORM()
-{
-    $session = new Model (
-        uname: "root",
-        pwd: "",
-        host:"localhost",
-        db:"pixel_sequel"
-    );
-
-    var_dump(Model::All(table: "users"));
-    var_dump(Model::Find(table: "users", param_t: "id",param_n: 24));
-    var_dump(Model::Search(table: "users", param_t: "uname",param_n: "seb"));
-
-    $session->disconnect();
-}
-
-test_ORM();
+?>
