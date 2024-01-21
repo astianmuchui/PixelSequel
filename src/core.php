@@ -29,7 +29,8 @@ interface PixelSequelORM
     public function query(mixed $sql): PDOStatement;
     public static function Insert(mixed $table, array $data): bool;
     public static function Update(mixed $table, mixed $param_t = "id", mixed $param_n, array $data): bool;
-    public static function All(mixed $table, mixed $order_by="", mixed $order=""): array | object;
+    public static function All(mixed $table, iterable $where=null, iterable $where_like=null, mixed $order_by="", mixed $order="", int $limit=null, bool $json=false): mixed;
+    public function Select(mixed $table, array $rows,mixed $order_by="", mixed $order, mixed $where=null, mixed $where_like=null, int $limit=null): array | object;
     public static function Find(mixed $table, mixed $param_t="id", mixed $param_n, mixed $order_by = "",string $order=""): array;
     public static function Search(mixed $table, mixed $param_t="id", mixed $param_n, mixed $order_by = "", mixed $order=""): array;
     public static function Delete(mixed $table, mixed $param_t="id", mixed $param_n): bool;
@@ -138,20 +139,17 @@ class Model implements PixelSequelORM
 
         return $stmt->execute();
     }
-
     /**
      * @Update: update record from table
-     * @param string $table: table name
-     * @param string $param_t: parameter type
-     * @param string $param_n: parameter name
+     * @param mixed $table: table name
+     * @param mixed $param_t: parameter type
+     * @param mixed $param_n: parameter name
      * @param array $data: data to be inserted
     */
 
     public static function Update(mixed $table, mixed $param_t = "id", mixed $param_n, array $data): bool
     {
-        /**
-          * Update $table SET $data WHERE $param_t = $param_n
-        */
+
     /**
      * @Create: create record from table
      * @param string $table: table name
@@ -170,46 +168,169 @@ class Model implements PixelSequelORM
 
 
     /**
-     * @All: get all records from table
+     * @All - Selects all records from table
      * @param string $table: table name
+     * @param array $where: where clause
+     * @param array $where_like: where like clause
+     * @param string $order_by: order by clause
+     * @param string $order: order clause
+     * @param int $limit: limit clause
      * @return array
      */
 
-    public static function All(mixed $table, mixed $order_by="", mixed $order=""): array | object
+    public static function All(mixed $table, iterable $where=null, iterable $where_like=null, mixed $order_by="", mixed $order="", int $limit=null, bool $json=false): mixed
     {
-        if ($order_by == "")
+        if ($where == null && $where_like == null)
         {
-            $sql = "SELECT * FROM `$table`";
+            if ($order_by == "")
+            {
+                $sql = "SELECT * FROM `$table`";
+            }
+            else
+            {
+                $sql = "SELECT * FROM `$table` ORDER BY `$order_by` $order";
+            }
         }
-        else
+        else if ($where != null && $where_like == null)
         {
-            $sql = "SELECT * FROM `$table` ORDER BY `$order_by` $order";
+            $sql = "SELECT * FROM `$table` WHERE ";
+            foreach ($where as $key => $value)
+            {
+                $sql .= "`$key` = '$value' AND ";
+            }
+            $sql = rtrim($sql, "AND ");
+            if ($order_by != "")
+            {
+                $sql .= " ORDER BY `$order_by` $order";
+            }
+        }
+        else if ($where == null && $where_like != null)
+        {
+            $sql = "SELECT * FROM `$table` WHERE ";
+            foreach ($where_like as $key => $value)
+            {
+                $sql .= "`$key` LIKE '%$value%' AND ";
+            }
+            $sql = rtrim($sql, "AND ");
+            if ($order_by != "")
+            {
+                $sql .= " ORDER BY `$order_by` $order";
+            }
+        }
+        else if ($where != null && $where_like != null)
+        {
+            $sql = "SELECT * FROM `$table` WHERE ";
+            foreach ($where as $key => $value)
+            {
+                $sql .= "`$key` = '$value' AND ";
+            }
+            foreach ($where_like as $key => $value)
+            {
+                $sql .= "`$key` LIKE '%$value%' AND ";
+            }
+            $sql = rtrim($sql, "AND ");
+            if ($order_by != "")
+            {
+                $sql .= " ORDER BY `$order_by` $order";
+            }
+        }
+
+        if ($limit != null)
+        {
+            $sql .= " LIMIT $limit";
         }
 
         $stmt = self::$connection->query($sql);
         $stmt->execute();
 
-        return $stmt->fetchAll();
-    }
-
-    /**
-     * @FetchN: fetch N records from table
-     * @param string $table: table name
-     * @param string $param_t: parameter type
-     * @param string $param_n: parameter name
-     * @param int $limit: limit
-     * @return array
-    */
-
-    public function FetchN(mixed $table, mixed $param_t="id", mixed $param_n, int $limit, mixed $order_by="" , string $order=""): array | object
-    {
-        if ($order_by == "")
+        if ($json = true)
         {
-            $sql = "SELECT * FROM `$table` WHERE `$param_t` = $param_n LIMIT $limit";
+            return json_encode($stmt->fetchAll());
         }
         else
         {
-            $sql = "SELECT * FROM `$table` WHERE `$param_t` = $param_n ORDER BY `$order_by` $order LIMIT $limit";
+            return $stmt->fetchAll();
+        }
+    }
+
+    /**
+     * @Select: fetch N records from table
+     * @param array rows: rows
+     * @param mixed table: table name
+     * @param mixed order_by: order by
+     * @param mixed order: order
+     * @param where: where
+     * @param where_like: where like
+     * @param int $limit: limit
+     * @return array or object
+    */
+
+    public function Select(mixed $table, array $rows,mixed $order_by="", mixed $order, mixed $where=null, mixed $where_like=null, int $limit=null): array | object
+    {
+
+        if ($where == null && $where_like == null)
+        {
+            if ($order_by == "")
+            {
+                $sql = "SELECT ";
+                $sql .= implode(", ", $rows) . " FROM `$table`";
+            }
+            else
+            {
+                $sql = "SELECT ";
+                $sql .= implode(", ", $rows) . " FROM `$table` ORDER BY `$order_by` $order";
+            }
+        }
+        else if ($where != null && $where_like == null)
+        {
+            $sql = "SELECT ";
+            $sql .= implode(", ", $rows) . " FROM `$table` WHERE ";
+            foreach ($where as $key => $value)
+            {
+                $sql .= "`$key` = '$value' AND ";
+            }
+            $sql = rtrim($sql, "AND ");
+            if ($order_by != "")
+            {
+                $sql .= " ORDER BY `$order_by` $order";
+            }
+        }
+        else if ($where == null && $where_like != null)
+        {
+            $sql = "SELECT ";
+            $sql .= implode(", ", $rows) . " FROM `$table` WHERE ";
+            foreach ($where_like as $key => $value)
+            {
+                $sql .= "`$key` LIKE '%$value%' AND ";
+            }
+            $sql = rtrim($sql, "AND ");
+            if ($order_by != "")
+            {
+                $sql .= " ORDER BY `$order_by` $order";
+            }
+        }
+        else if ($where != null && $where_like != null)
+        {
+            $sql = "SELECT ";
+            $sql .= implode(", ", $rows) . " FROM `$table` WHERE ";
+            foreach ($where as $key => $value)
+            {
+                $sql .= "`$key` = '$value' AND ";
+            }
+            foreach ($where_like as $key => $value)
+            {
+                $sql .= "`$key` LIKE '%$value%' AND ";
+            }
+            $sql = rtrim($sql, "AND ");
+            if ($order_by != "")
+            {
+                $sql .= " ORDER BY `$order_by` $order";
+            }
+        }
+
+        if ($limit != null)
+        {
+            $sql .= " LIMIT $limit";
         }
 
         $stmt = self::$connection->query($sql);
