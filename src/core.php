@@ -551,7 +551,7 @@ class Schema implements PixelSequelSchema
 
 
     /**
-     * @Drop: drop table
+     * @Drop: drops table
      * @param string $table: table name
      * @return bool
     */
