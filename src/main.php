@@ -34,13 +34,33 @@ Database::Update (
     "email" => "codyrhodes@gmail.com"
 ]);
 
-// Fetch data
+// Fetch data with parameters
+var_dump (
+    Database::All (
+        table: "users",
+        order_by: "id",
+        order: "ASC",
+        where: [
+            "uname" => "Cody"
+        ],
+        limit: 1,
+        json : true
+    )
+);
 
-var_dump(Database::All (
-    table: "users",
-    order_by: "id",
-    order: "ASC"
-));
+// Search Data
+
+var_dump (
+    Database::All (
+        table: "users",
+        order_by: "id",
+        order: "ASC",
+        where_like: [
+            "phone" => "0794"
+        ],
+        limit: 4
+    )
+);
 
 
 // Delete data
