@@ -451,7 +451,7 @@ interface PixelSequelSchema
     public static function Alter(string $table, mixed $column, mixed $set): bool;
 }
 
-class Schema extends Model implements PixelSequelSchema
+class Schema implements PixelSequelSchema
 {
 
     /**
