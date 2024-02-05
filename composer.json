@@ -1,20 +1,22 @@
 {
-    "name": "astianmuchui/pixelsequel",
-    "description": "The PixelSequel ORM",
-    "license": "MIT",
-    "type": "library",
-
-    "require": {
-        "php": "^8.0",
-        "ext-json": "*"
-    },
-
-    "minimum-stability": "stable",
-
-    "authors": [
-	    {
-	      "name": "Sebastian Muchui",
-	      "email": "astianmuchui@gmail.com"
-	    }
-	]
+  "name": "astianmuchui/pixelsequel",
+  "description": "A lightweight ORM",
+  "type": "library",
+  "license": "MIT",
+  "authors": [
+      {
+          "name": "Sebastian Muchui",
+          "email": "astianmuchui@gmail.com"
+      }
+  ],
+  "minimum-stability": "stable",
+  "autoload": {
+      "psr-4": {
+          "PixelSequel\\Model\\": "src/core.php"
+      }
+  },
+  "require": {},
+  "require-dev": {
+      "phpunit/phpunit": "^9.5"
+  }
 }
