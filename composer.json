@@ -1,17 +1,17 @@
 {
     "name": "astianmuchui/pixelsequel",
     "description": "PixelSequel ORM",
+    "license": "Apache",
     "type": "library",
-    "repositories": [
-        {
-            "type": "git",
-            "url": "https://github.com/astianmuchui/PixelSequel/"
-        }
-    ],
+
     "require": {
-        "php": "8.3.2"
+        "php": "^8.0",
+        "ext-json": "*"
     },
-	"authors": [
+
+    "minimum-stability": "dev",
+    
+    "authors": [
 	    {
 	      "name": "Sebastian Muchui",
 	      "email": "astianmuchui@gmail.com"
