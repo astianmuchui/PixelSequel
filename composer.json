@@ -1,6 +1,6 @@
 {
     "name": "astianmuchui/pixelsequel",
-    "description": "PixelSequel ORM",
+    "description": "The PixelSequel ORM",
     "license": "MIT",
     "type": "library",
 
@@ -9,7 +9,7 @@
         "ext-json": "*"
     },
 
-    "minimum-stability": "dev",
+    "minimum-stability": "stable",
 
     "authors": [
 	    {
