@@ -4,15 +4,15 @@
   "type": "library",
   "license": "MIT",
   "authors": [
-      {
-          "name": "Sebastian Muchui",
-          "email": "astianmuchui@gmail.com"
-      }
+    {
+      "name": "Sebastian Muchui",
+      "email": "astianmuchui@gmail.com"
+    }
   ],
-  "minimum-stability": "stable",
-
+  "minimum-stability": "dev",
   "require": {},
   "require-dev": {
-      "phpunit/phpunit": "^9.5"
+    "phpunit/phpunit": "^9.5",
+    "astianmuchui/pixelsequel": "1.0.0"
   }
 }
