@@ -2,11 +2,20 @@
     "name": "astianmuchui/pixelsequel",
     "description": "PixelSequel ORM",
     "type": "library",
-
-		"authors": [
+    "repositories": [
+        {
+            "type": "git",
+            "url": "https://github.com/astianmuchui/PixelSequel/"
+        }
+    ],
+    "require": {
+        "php": "^7.2.0",
+        "astianmuchui/PixelSequel": "dev-staging"
+    }
+	"authors": [
 	    {
 	      "name": "Sebastian Muchui",
 	      "email": "astianmuchui@gmail.com"
 	    }
-		]
+	]
 }
