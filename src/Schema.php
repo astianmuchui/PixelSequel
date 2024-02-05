@@ -3,6 +3,8 @@ namespace PixelSequel;
 
 require "./Model.php";
 use PixelSequel\Model as Model;
+use PDO, PDOException, PDOStatement;
+
 
 interface PixelSequelSchema
 {
