@@ -11,7 +11,7 @@
     "require": {
         "php": "^7.2.0",
         "astianmuchui/PixelSequel": "dev-staging"
-    }
+    },
 	"authors": [
 	    {
 	      "name": "Sebastian Muchui",
