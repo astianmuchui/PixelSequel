@@ -10,11 +10,7 @@
       }
   ],
   "minimum-stability": "stable",
-  "autoload": {
-      "psr-4": {
-          "PixelSequel\\Model\\": "src/core.php"
-      }
-  },
+
   "require": {},
   "require-dev": {
       "phpunit/phpunit": "^9.5"
