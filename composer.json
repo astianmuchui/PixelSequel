@@ -1,17 +1,10 @@
 {
-  "name": "astianmuchui/pixelsequel",
-  "description": "A lightweight ORM",
-  "type": "library",
-  "license": "MIT",
-  "authors": [
-    {
-      "name": "Sebastian Muchui",
-      "email": "astianmuchui@gmail.com"
-    }
-  ],
-  "minimum-stability": "dev",
-  "require": {},
-  "require-dev": {
-    "phpunit/phpunit": "^9.5"
-  }
+    "name": "astianmuchui/pixelsequel",
+    "description": "A Lightweight PHP ORM",
+    "type": "library",
+    "require": {
+        "ramsey/uuid": "5.x-dev"
+    },
+    "license": "MIT",
+    "minimum-stability": "dev"
 }

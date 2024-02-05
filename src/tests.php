@@ -1,9 +1,10 @@
 <?php
 
-require 'core.php';
+require ('core.php');
 
 use PixelSequel\Schema as Table;
 use PixelSequel\Model as Database;
+
 
 new Database (
     uname: "root",
@@ -13,7 +14,7 @@ new Database (
 );
 
 Table::Create (
-    table: "some_weird_stuff",
+    table: "mytable",
     data: [
         "id" => [
             "type" => "int",
@@ -30,15 +31,14 @@ Table::Create (
 );
 
 Table::Alter (
-    table: "some_weird_stuff",
+    table: "mytable",
     column: "id",
     set: "int(255) NOT NULL AUTO_INCREMENT"
 );
 
 
 Table::Drop (
-    table: "some_weird_stuff"
+    table: "mytable"
 );
 
 ?>
-
