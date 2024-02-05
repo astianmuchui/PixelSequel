@@ -9,6 +9,13 @@
             "email": "astianmuchui@gmail.com"
         }
     ],
+    "autoload": {
+        "psr-4": {
+            "PixelSequel\\Model\\": "src/Model",
+            "PixelSequel\\Schema\\": "src/Schema"
+        }
+    },
+
     "minimum-stability": "dev",
     "require": {}
 }
