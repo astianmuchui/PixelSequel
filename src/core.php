@@ -43,13 +43,13 @@ class Model implements PixelSequelORM
 {
 
     /**
-     * @uname: username
-     * @pwd: password
-     * @host: host
-     * @conn: connection
-     * @db: database
-     * @Connected: connection status
-     * @connection: connection object
+    * @property uname: username
+    * @property pwd: password
+    * @property host: host
+    * @property conn: connection
+    * @property db: database
+    * @property Connected: connection status
+    * @property connection: connection object
     */
 
     public $uname;
@@ -462,7 +462,7 @@ class Schema implements PixelSequelSchema
 
     public function __construct()
     {
-        if (!(Model::$Connected instanceof true))
+        if (!(Model::$connection instanceof PDO))
         {
             die ("Error: Database not connected");
         }
