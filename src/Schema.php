@@ -1,4 +1,5 @@
 <?php
+namespace PixelSequel;
 
 require "./Model.php";
 use PixelSequel\Model as Model;
