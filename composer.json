@@ -3,6 +3,11 @@
     "description": "A lightweight PHP ORM",
     "type": "library",
     "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Astianmuchui\\Pixelsequel\\": "src/"
+        }
+    },
     "authors": [
         {
             "name": "astianmuchui",
