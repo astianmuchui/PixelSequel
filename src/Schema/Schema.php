@@ -23,7 +23,7 @@ namespace PixelSequel\Schema;
 
 
 
-require "./src/core.php";
+require "../src/core.php";
 use PixelSequel\Model;
 use PDO, PDOException;
 
