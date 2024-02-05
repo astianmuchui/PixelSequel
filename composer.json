@@ -1,7 +1,7 @@
 {
     "name": "astianmuchui/pixelsequel",
     "description": "PixelSequel ORM",
-    "license": "Apache",
+    "license": "MIT",
     "type": "library",
 
     "require": {
@@ -10,7 +10,7 @@
     },
 
     "minimum-stability": "dev",
-    
+
     "authors": [
 	    {
 	      "name": "Sebastian Muchui",
