@@ -1,0 +1,12 @@
+{
+    "name": "astianmuchui/pixelsequel",
+    "description": "PixelSequel ORM",
+    "type": "library",
+
+		"authors": [
+	    {
+	      "name": "Sebastian Muchui",
+	      "email": "astianmuchui@gmail.com"
+	    }
+		]
+}
