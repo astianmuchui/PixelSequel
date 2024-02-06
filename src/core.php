@@ -28,8 +28,8 @@ interface PixelSequelORM
     public function connect(): PDO | bool;
     public function query(mixed $sql): PDOStatement;
     public static function Insert(mixed $table, array $data): bool;
-    public static function Update(mixed $table,  mixed $param_n, array $data, mixed $param_t = "id"): bool;
-    public static function All(mixed $table, iterable $where=null, iterable $where_like=null, mixed $order_by="", mixed $order="", int $limit=null, bool $json=false): mixed;
+    public static function Update(mixed $table, mixed $param_n, array $data, mixed $param_t = "id"): bool;
+    public static function All(mixed $table, iterable $where = null, iterable $where_like = null, mixed $order_by = "", mixed $order = "", int $limit = null, bool $json = false): mixed;
     public static function Find(mixed $table, mixed $param_n, mixed $param_t="id", mixed $order_by = "",string $order=""): array;
     public static function Search(mixed $table,  mixed $param_n, mixed $param_t="id", mixed $order_by = "", mixed $order=""): array;
     public static function Delete(mixed $table,  mixed $param_n, mixed $param_t="id",): bool;
@@ -69,7 +69,7 @@ class Model implements PixelSequelORM
      * @defaults: 
     */
 
-    public function __construct( mixed $db , mixed $uname = "root", mixed $pwd = "", mixed $host = "localhost" )
+    public function __construct( string $db , string $uname = "root", string $pwd = "", string $host = "localhost" )
     {
         $this->uname = $uname;
         $this->pwd = $pwd;
@@ -435,9 +435,9 @@ class Model implements PixelSequelORM
 interface PixelSequelSchema
 {
     public static function Exists(string $table): bool;
-    public static function Create(mixed $table, array $data): bool;
+    public static function Create(mixed $table, array $data=[[]]): bool;
     public static function Drop(mixed $table): bool;
-    public static function Alter(string $table, mixed $column, mixed $set): bool;
+    public static function Alter(string $table, string $column, mixed $set): bool;
 }
 
 class Schema implements PixelSequelSchema

@@ -32,9 +32,9 @@ use PDO, PDOException;
 interface PixelSequelSchema
 {
     public static function Exists(string $table): bool;
-    public static function Create(mixed $table, array $data): bool;
+    public static function Create(mixed $table, array $data=[[]]): bool;
     public static function Drop(mixed $table): bool;
-    public static function Alter(string $table, mixed $column, mixed $set): bool;
+    public static function Alter(string $table, string $column, mixed $set): bool;
 }
 
 class Schema implements PixelSequelSchema
