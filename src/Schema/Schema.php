@@ -29,6 +29,7 @@ use PDO, PDOException;
 
 interface PixelSequelSchema
 {
+    public static function Exists(string $table): bool;
     public static function Create(mixed $table, array $data): bool;
     public static function Drop(mixed $table): bool;
     public static function Alter(string $table, mixed $column, mixed $set): bool;
@@ -51,6 +52,21 @@ class Schema implements PixelSequelSchema
         }
     }
 
+
+    /**
+     * @TableExists: check if table exists
+     * @param string $table: table name
+     * @return bool
+     */
+
+     public static function Exists(string $table): bool
+     {
+         $sql = "SHOW TABLES LIKE '$table'";
+         $stmt = Model::$connection->query($sql);
+         $stmt->execute();
+         return $stmt->rowCount() > 0;
+     }
+
     /**
     * @Create: create table
     * @param mixed $table: table name
@@ -62,7 +78,7 @@ class Schema implements PixelSequelSchema
     public static function Create(mixed $table, array $data = [[]]): bool
     {
 
-        if (Model::TableExists($table))
+        if (self::Exists($table))
         {
             exit();
         }

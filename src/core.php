@@ -28,12 +28,12 @@ interface PixelSequelORM
     public function connect(): PDO | bool;
     public function query(mixed $sql): PDOStatement;
     public static function Insert(mixed $table, array $data): bool;
-    public static function Update(mixed $table, mixed $param_t = "id", mixed $param_n, array $data): bool;
+    public static function Update(mixed $table,  mixed $param_n, array $data, mixed $param_t = "id"): bool;
     public static function All(mixed $table, iterable $where=null, iterable $where_like=null, mixed $order_by="", mixed $order="", int $limit=null, bool $json=false): mixed;
-    public static function Find(mixed $table, mixed $param_t="id", mixed $param_n, mixed $order_by = "",string $order=""): array;
-    public static function Search(mixed $table, mixed $param_t="id", mixed $param_n, mixed $order_by = "", mixed $order=""): array;
+    public static function Find(mixed $table, mixed $param_n, mixed $param_t="id", mixed $order_by = "",string $order=""): array;
+    public static function Search(mixed $table,  mixed $param_n, mixed $param_t="id", mixed $order_by = "", mixed $order=""): array;
     public static function TableExists(string $table): bool;
-    public static function Delete(mixed $table, mixed $param_t="id", mixed $param_n): bool;
+    public static function Delete(mixed $table,  mixed $param_n, mixed $param_t="id",): bool;
     public static function DeleteAll(mixed $table): bool;
     public static function Disconnect(): void;
 
@@ -70,7 +70,7 @@ class Model implements PixelSequelORM
      * @defaults: 
     */
 
-    public function __construct(mixed $uname = "root", mixed $pwd = "", mixed $host = "localhost", mixed $db)
+    public function __construct( mixed $db , mixed $uname = "root", mixed $pwd = "", mixed $host = "localhost" )
     {
         $this->uname = $uname;
         $this->pwd = $pwd;
@@ -148,7 +148,7 @@ class Model implements PixelSequelORM
      * @param array $data: data to be inserted
     */
 
-    public static function Update(mixed $table, mixed $param_t = "id", mixed $param_n, array $data): bool
+    public static function Update(mixed $table,  mixed $param_n, array $data, mixed $param_t = "id"): bool
     {
 
     /**
@@ -347,7 +347,7 @@ class Model implements PixelSequelORM
      * @return array
     */
 
-    public static function Find(mixed $table, mixed $param_t="id", mixed $param_n, mixed $order_by = "",string $order=""): array
+    public static function Find(mixed $table, mixed $param_n, mixed $param_t="id", mixed $order_by = "",string $order=""): array
     {
         if ($order_by == "")
         {
@@ -371,7 +371,7 @@ class Model implements PixelSequelORM
      * @return array
     */
 
-    public static function Search(mixed $table, mixed $param_t="id", mixed $param_n, mixed $order_by = "", mixed $order=""): array
+    public static function Search(mixed $table,  mixed $param_n, mixed $param_t="id", mixed $order_by = "", mixed $order=""): array
     {
         if ($order_by == "")
         {
@@ -409,7 +409,7 @@ class Model implements PixelSequelORM
      * @return bool
     */
 
-    public static function Delete(mixed $table, mixed $param_t="id", mixed $param_n): bool
+    public static function Delete(mixed $table,  mixed $param_n, mixed $param_t="id",): bool
     {
             $sql = "DELETE FROM `$table` WHERE `$param_t` = '$param_n'";
             $stmt = self::$connection->query($sql);

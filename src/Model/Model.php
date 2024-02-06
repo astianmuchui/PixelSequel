@@ -32,7 +32,7 @@ interface PixelSequelORM
     public static function All(mixed $table, iterable $where=null, iterable $where_like=null, mixed $order_by="", mixed $order="", int $limit=null, bool $json=false): mixed;
     public static function Find(mixed $table, mixed $param_t="id", mixed $param_n, mixed $order_by = "",string $order=""): array;
     public static function Search(mixed $table, mixed $param_t="id", mixed $param_n, mixed $order_by = "", mixed $order=""): array;
-    public static function TableExists(string $table): bool;
+
     public static function Delete(mixed $table, mixed $param_t="id", mixed $param_n): bool;
     public static function DeleteAll(mixed $table): bool;
     public static function Disconnect(): void;
@@ -386,20 +386,6 @@ class Model implements PixelSequelORM
         $stmt->execute();
         return $stmt->fetchAll();
     }
-
-    /**
-     * @TableExists: check if table exists
-     * @param string $table: table name
-     * @return bool
-     */
-
-     public static function TableExists(string $table): bool
-     {
-         $sql = "SHOW TABLES LIKE '$table'";
-         $stmt = self::$connection->query($sql);
-         $stmt->execute();
-         return $stmt->rowCount() > 0;
-     }
 
     /**
      * @Delete: delete record from table
