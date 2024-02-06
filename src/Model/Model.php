@@ -1,6 +1,11 @@
 <?php
 
+
 namespace PixelSequel\Model;
+
+
+session_start();
+
 
 
 /**
@@ -21,21 +26,69 @@ namespace PixelSequel\Model;
 // ini_set('display_errors', 'On');
 // error_reporting(E_ALL);
 
+class CipherOps
+{
+   public static $method = "AES-128-CTR";
+   public static $options = 0;
+   public static $enc_iv = '1234567891011121';
+
+   public static $key = '$2y$10$Lvh7toMVlSJjwmMHSZ5ULOWkFITbUuK6mr/NG2YKluolXTpI.lLbu';
+   public static $pepper = '$2y$10$np7bVhRUeR5qQNDlAL.hOOvDaEwZdghmLpz8HjkVJnX0vJbmuyto2';
+   public static $salt = '$2y$10$PYbF/lbCcZ5G4wK39svrRO0k2HM/rj.Iu8NqUxpcI01BmfIZq0J9e';
+
+   public static function aes_ctr_ssl_encrypt128( string | array | int $data)
+   {
+        $method = self::$method;
+        $enc_key = self::$key;
+        $options = self::$options;
+        $enc_iv = self::$enc_iv;
+        $iv_length = openssl_cipher_iv_length($method);
+
+        switch(gettype($data))
+        {
+            case "Array":
+                return openssl_encrypt($data,$method,$enc_key,$options,$enc_iv);
+            case "Integer":
+                return openssl_encrypt($data,$method,$enc_key,$options,$enc_iv);
+
+            case "string":
+                return openssl_encrypt($data,$method,$enc_key,$options,$enc_iv);
+        }
+   }
+
+   public static function aes_ctr_ssl_decrypt128( string | array | int $data)
+   {
+        $method = self::$method;
+        $enc_key = self::$key;
+        $options = self::$options;
+        $enc_iv = self::$enc_iv;
+
+        switch(gettype($data))
+        {
+            case "Array":
+                return openssl_decrypt($data,$method,$enc_key,$options,$enc_iv);
+            case "Integer":
+                return openssl_decrypt($data,$method,$enc_key,$options,$enc_iv);
+            case "string":
+                return openssl_decrypt($data,$method,$enc_key,$options,$enc_iv);
+        }
+   }
+}
+
+
 use PDO, PDOException, PDOStatement;
 
 interface PixelSequelORM
 {
     public function connect(): PDO | bool;
-    public function query(mixed $sql): PDOStatement;
     public static function Insert(mixed $table, array $data): bool;
-    public static function Update(mixed $table, mixed $param_n, array $data, mixed $param_t = "id"): bool;
-    public static function All(mixed $table, iterable $where = null, iterable $where_like = null, mixed $order_by = "", mixed $order = "", int $limit = null, bool $json = false): mixed;
+    public static function Update(mixed $table,  mixed $param_n, array $data, mixed $param_t = "id"): bool;
+    public static function All(mixed $table, iterable $where=null, iterable $where_like=null, mixed $order_by="", mixed $order="", int $limit=null, bool $json=false): mixed;
     public static function Find(mixed $table, mixed $param_n, mixed $param_t="id", mixed $order_by = "",string $order=""): array;
     public static function Search(mixed $table,  mixed $param_n, mixed $param_t="id", mixed $order_by = "", mixed $order=""): array;
     public static function Delete(mixed $table,  mixed $param_n, mixed $param_t="id",): bool;
     public static function DeleteAll(mixed $table): bool;
     public static function Disconnect(): void;
-
 }
 
 class Model implements PixelSequelORM
@@ -69,12 +122,18 @@ class Model implements PixelSequelORM
      * @defaults: 
     */
 
-    public function __construct( string $db , string $uname = "root", string $pwd = "", string $host = "localhost" )
+    public function __construct( mixed $db , mixed $uname = "root", mixed $pwd = "", mixed $host = "localhost" )
     {
-        $this->uname = $uname;
-        $this->pwd = $pwd;
-        $this->host = $host;
-        $this->db = $db;
+        $_SESSION['uname'] = $this->uname = $uname;
+        $_SESSION['pwd'] = $this->pwd = $pwd;
+        $_SESSION['host'] = $this->host = $host;
+        $_SESSION['db'] = $this->db = $db;
+
+        $_SESSION['uname'] = CipherOps::aes_ctr_ssl_encrypt128($_SESSION['uname']);
+        $_SESSION['pwd'] = CipherOps::aes_ctr_ssl_encrypt128($_SESSION['pwd']);
+        $_SESSION['host'] = CipherOps::aes_ctr_ssl_encrypt128($_SESSION['host']);
+        $_SESSION['db'] = CipherOps::aes_ctr_ssl_encrypt128($_SESSION['db']);
+
 
         if (!(self::$Connected instanceof true))
         {
@@ -82,7 +141,7 @@ class Model implements PixelSequelORM
         }
     }
 
-    /**
+    /**static
      * @connect: connect to database
      * @param void
      * @return PDO | bool
@@ -97,7 +156,8 @@ class Model implements PixelSequelORM
             $this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
             self::$connection = $this->conn;
-            self::$Connected = true;
+            $_SESSION['status'] = self::$Connected = true;
+
 
             return ($this->conn) || false;
         }
@@ -105,17 +165,6 @@ class Model implements PixelSequelORM
         {
             echo "Connection failed: " . $e->getMessage();
         }
-    }
-
-    /**
-     * @query: query database
-     * @param string $sql: sql query
-     * @return PDOStatement
-    */
-
-    public function query(mixed $sql): PDOStatement
-    {
-        return $this->conn->query($sql);
     }
 
     /**
@@ -429,6 +478,8 @@ class Model implements PixelSequelORM
         self::$Connected = false;
     }
 }
+
+
 
 
 ?>
