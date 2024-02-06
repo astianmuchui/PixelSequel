@@ -27,6 +27,8 @@ require "../src/core.php";
 use PixelSequel\Model;
 use PDO, PDOException;
 
+
+
 interface PixelSequelSchema
 {
     public static function Exists(string $table): bool;
@@ -52,9 +54,8 @@ class Schema implements PixelSequelSchema
         }
     }
 
-
     /**
-     * @TableExists: check if table exists
+     * @Exists: check if table exists
      * @param string $table: table name
      * @return bool
      */
@@ -173,7 +174,7 @@ class Schema implements PixelSequelSchema
     public static function Alter(string $table, mixed  $column, mixed $set): bool
     {
 
-        if (!Model::TableExists($table))
+        if (!self::Exists($table))
         {
             exit();
         }
