@@ -143,8 +143,7 @@ Here you basically need to just call the ```All``` method. The method can take a
 
 The method returns an object of the data retrieved. You can then loop through the object to get the data.
 If you set the limit to 1, you would need to select the zeroth index of the object to get the data.
-Typically one of the key goals while developin
-# Featuresg this was to make it that a single function does all the select functionality.
+Typically one of the key goals while developing this was to make it that a single function does all the select functionality.
 There are other select methods but ignore them as they are not well written and will be removed in future versions.
 
 ### Updating Data
