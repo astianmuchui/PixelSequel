@@ -1,5 +1,6 @@
 <?php
 
+
 namespace PixelSequel;
 
 
@@ -11,22 +12,26 @@ namespace PixelSequel;
 * @since  1.0.0
 * @license  None
 * @author Sebastian Muchui
-* @subpackage core
+* @subpackage Model
 * @category ORMs
 *
 */
 
+//  This is a combined chunk of code from the Model and Schema classes
 
 /** Enable debug: Remove this in production */
 // ini_set('display_errors', 'On');
 // error_reporting(E_ALL);
+
+
 
 use PDO, PDOException, PDOStatement;
 
 interface PixelSequelORM
 {
     public function connect(): PDO | bool;
-    public function query(mixed $sql): PDOStatement;
+    public static function Connection(): PDO;
+    public static function Connected(): bool;
     public static function Insert(mixed $table, array $data): bool;
     public static function Update(mixed $table,  mixed $param_n, array $data, mixed $param_t = "id"): bool;
     public static function All(mixed $table, iterable $where=null, iterable $where_like=null, mixed $order_by="", mixed $order="", int $limit=null, bool $json=false): mixed;
@@ -35,7 +40,6 @@ interface PixelSequelORM
     public static function Delete(mixed $table,  mixed $param_n, mixed $param_t="id",): bool;
     public static function DeleteAll(mixed $table): bool;
     public static function Disconnect(): void;
-
 }
 
 class Model implements PixelSequelORM
@@ -69,12 +73,13 @@ class Model implements PixelSequelORM
      * @defaults: 
     */
 
-    public function __construct( mixed $db , mixed $uname = "root", mixed $pwd = "", mixed $host = "localhost" )
+    public function __construct( mixed $dbname , mixed $username = "root", mixed $password = "", mixed $dbhost = "localhost" )
     {
-        $this->uname = $uname;
-        $this->pwd = $pwd;
-        $this->host = $host;
-        $this->db = $db;
+        $this->uname = $username;
+        $this->pwd = $password;
+        $this->host = $dbhost;
+        $this->db = $dbname;
+
 
         if (!(self::$Connected instanceof true))
         {
@@ -82,7 +87,7 @@ class Model implements PixelSequelORM
         }
     }
 
-    /**
+    /**static
      * @connect: connect to database
      * @param void
      * @return PDO | bool
@@ -97,7 +102,8 @@ class Model implements PixelSequelORM
             $this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
             self::$connection = $this->conn;
-            self::$Connected = true;
+            $_SESSION['status'] = self::$Connected = true;
+
 
             return ($this->conn) || false;
         }
@@ -108,14 +114,25 @@ class Model implements PixelSequelORM
     }
 
     /**
-     * @query: query database
-     * @param string $sql: sql query
-     * @return PDOStatement
-    */
+     * @Connection: get connection
+     * @param void
+     * @return PDO
+     */
 
-    public function query(mixed $sql): PDOStatement
+    public static function Connection(): PDO
     {
-        return $this->conn->query($sql);
+        return self::$connection;
+    }
+
+    /**
+     * @Connected: check if connected
+     * @param void
+     * @return bool
+     */
+
+    public static function Connected(): bool
+    {
+        return self::$Connected;
     }
 
     /**
@@ -432,16 +449,38 @@ class Model implements PixelSequelORM
 
 
 
+
+
+/**
+*
+* @package  PixelSequel ORM
+* @description  PixelSequel ORM is a lightweight ORM for PHP
+* @version  1.0.0
+* @since  1.0.0
+* @license  None
+* @author Sebastian Muchui
+* @subpackage Schema
+* @category ORMs
+*
+*/
+
+/** Enable debug: Remove this in production */
+// ini_set('display_errors', 'On');
+// error_reporting(E_ALL);
+
+
 interface PixelSequelSchema
 {
     public static function Exists(string $table): bool;
-    public static function Create(mixed $table, array $data): bool;
+    public static function Create(mixed $table, array $structure): bool;
     public static function Drop(mixed $table): bool;
     public static function Alter(string $table, mixed $column, mixed $set): bool;
 }
 
 class Schema implements PixelSequelSchema
 {
+    public $conn;
+    public static $connection;
 
     /**
      * @__construct: constructor function
@@ -449,11 +488,16 @@ class Schema implements PixelSequelSchema
      * @return void
     */
 
-    public function __construct()
+    public function __construct(PDO $connection)
     {
-        if (!(Model::$connection instanceof PDO))
+        if ($connection instanceof PDO)
         {
-            die ("Error: Database not connected");
+            $this->conn = $connection;
+            self::$connection = $connection;
+        }
+        else
+        {
+            throw new PDOException("Invalid connection");
         }
     }
 
@@ -465,9 +509,12 @@ class Schema implements PixelSequelSchema
 
      public static function Exists(string $table): bool
      {
+        echo $_SESSION['uname'];
+        echo $_SESSION['pwd'];
+        echo $_SESSION['host'];
          $sql = "SHOW TABLES LIKE '$table'";
-         $stmt = Model::$connection->query($sql);
-         $stmt->execute();
+         $stmt = self::$connection->query($sql);
+         $stmt->execute(null);
          return $stmt->rowCount() > 0;
      }
 
@@ -479,21 +526,16 @@ class Schema implements PixelSequelSchema
     */
 
 
-    public static function Create(mixed $table, array $data = [[]]): bool
+    public static function Create(mixed $table, array $structure = [[]]): bool
     {
-
-        if (self::Exists($table))
-        {
-            exit();
-        }
 
         $sql = "CREATE TABLE IF NOT EXISTS `$table` (";
 
         $primaryKey = (null);
 
-        foreach ($data as $col => $properties)
+        foreach ($structure as $col => $properties)
         {
-            if ($col !== array_key_first($data))
+            if ($col !== array_key_first($structure))
             {
                 $sql .= ", ";
             }
@@ -538,14 +580,14 @@ class Schema implements PixelSequelSchema
 
         $sql .= ") ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;";
 
-        $stmt = Model::$connection->prepare($sql);
+        $stmt = self::$connection->query($sql);
         $stmt->execute();
 
         /** Alter tables to add primary keys if they do exist */
         if ($primaryKey)
         {
             $alterSql = "ALTER TABLE `$table` ADD PRIMARY KEY (`$primaryKey`);";
-            $alterStmt = Model::$connection->prepare($alterSql);
+            $alterStmt = self::$connection->query($alterSql);
             $alterStmt->execute();
         }
 
@@ -561,8 +603,8 @@ class Schema implements PixelSequelSchema
 
     public static function Drop(mixed $table): bool
     {
-        $sql = "DROP TABLE `$table`";
-        $stmt = Model::$connection->prepare($sql);
+        $sql = "DROP TABLE IF EXISTS `$table`";
+        $stmt = self::$connection->query($sql);
         return $stmt->execute();
     }
 
@@ -577,18 +619,14 @@ class Schema implements PixelSequelSchema
     public static function Alter(string $table, mixed  $column, mixed $set): bool
     {
 
-        if (!self::Exists($table))
-        {
-            exit();
-        }
 
-        $sql = "ALTER TABLE `$table`  \n \t MODIFY `$column` $set;";
 
-        $stmt = Model::$connection->prepare($sql);
+        $sql = "ALTER TABLE  IF EXISTS `$table`  \n \t MODIFY `$column` $set;";
+
+        $stmt = self::$connection->query($sql);
         return $stmt->execute();
     }
 
 }
-
 
 ?>
