@@ -4,7 +4,7 @@
 body
 {
     background: rgb(0, 0, 0);
-    background: linear-gradient(221deg, rgb(4, 2, 2) 0%, rgb(12, 5, 2) 22%, rgb(0, 0, 0) 56%);
+    background: linear-gradient(221deg, rgb(4, 2, 2) 0%, rgb(9, 3, 1) 22%, rgb(0, 0, 0) 56%);
     margin: 0;
     padding: 0;
     box-sizing: border-box;
@@ -92,7 +92,6 @@ body
             h1
             {
                 font-size: 40px;
-                color: $white;
                 width: 70%;
                 margin-bottom: 3%;
             }
@@ -145,6 +144,17 @@ body
             @extend .flex-column;
             box-sizing: border-box;
 
+            .text
+            {
+                width: 80%;
+
+                *
+                {
+                    margin-bottom: 10%;
+                    border-radius: 1px;
+                }
+            }
+
 
             .sub-container
             {
@@ -192,15 +202,15 @@ body
 
         }
 
-        &:nth-of-type(2)
+        &:nth-of-type(1)
         {
-            height: 70vh;
+            height: 56vh;
             @extend .flex-column;
             margin-bottom: 10%;
             h1
             {
 
-                margin-bottom: 10%;
+                margin-bottom: 5%;
             }
 
             .code-container
@@ -208,15 +218,38 @@ body
                 img
                 {
                     border-radius: 15px;
-                    width: 80%;
+                    width: 70%;
                     border: 1px solid darken($primary-color, 25);
                 }
             }
         }
 
-        &:nth-of-type(3)
+        &:nth-of-type(2)
         {
-            height: 85vh;
+            height: 100vh;
+            @extend .flex-column, .y-start;
+            margin-bottom: 5%;
+
+            h1
+            {
+                margin-bottom: 5%;
+            }
+
+            .code-container
+            {
+                img
+                {
+                    border-radius: 15px;
+                    width: 60%;
+                    border: 1px solid darken($primary-color, 25);
+                    margin-bottom: 2%;
+                }
+            }
+        }
+
+        &:nth-of-type(3), &:nth-of-type(4)
+        {
+            height: 95vh;
             @extend .flex-column, .y-start;
 
             h1
@@ -226,14 +259,42 @@ body
 
             .code-container
             {
+                width:70%;
+                @extend .grid-2;
+                .text
+                {
+                    width: 80%;
+
+                    *
+                    {
+                        margin-bottom: 10%;
+                        border-radius: 1px;
+                    }
+                }
                 img
                 {
                     border-radius: 15px;
-                    width: 65%;
+                    width: 80%;
                     border: 1px solid darken($primary-color, 25);
                     margin-bottom: 2%;
                 }
             }
+        }
+
+        &:nth-of-type(4)
+        {
+            height: 100vh;
+            margin: 5% 0 0 0 ;
+
+            .code-container
+            {
+                grid-gap: 30px;
+                img
+                {
+                    width: 95%;
+                }
+            }
+
         }
     }
 
