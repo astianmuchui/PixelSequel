@@ -194,7 +194,6 @@ The schema is the part of the ORM that allows you to interact with the database 
 ```php
     use PixelSequel\Model\Model;
     use PixelSequel\Schema\Schema;
-# Features
 
     new Model (
         dbname: 'pixel_sequel'
