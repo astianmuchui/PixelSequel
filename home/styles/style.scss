@@ -370,7 +370,7 @@ body
         section
         {
             height: max-content;
-            margin-bottom: 10%;
+            margin-bottom: 15%;
 
             h1
             {
@@ -396,6 +396,8 @@ body
                 img
                 {
                     width: 100%;
+                    margin-top: 5%;
+
                 }
 
                 .sub-container
@@ -430,6 +432,8 @@ body
                     img
                     {
                         width: 100%;
+                        margin-top: 5%;
+
                     }
                 }
             }
@@ -455,10 +459,16 @@ body
                         width: 100%;
                         text-align: center;
 
+                        *
+                        {
+                            border-radius: 50px;
+                        }
                     }
                     img
                     {
                         margin-top: 5%;
+                        margin-top: 5%;
+
                         width: 100%;
                     }
                 }
@@ -486,13 +496,20 @@ body
                     {
                         width: 100%;
                         text-align: center;
-                        margin-top: 15%;
+                        margin-top: 20%;
+
+                        *
+                        {
+                            border-radius: 50px;
+                        }
 
 
                     }
                     img
                     {
                         margin-top: 5%;
+                        margin-bottom: 5%;
+
                         width: 100%;
                     }
                 }
