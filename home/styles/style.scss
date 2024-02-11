@@ -300,3 +300,200 @@ body
 
 }
 
+
+@media screen and (max-width: 768px)
+{
+    body
+    {
+        header
+        {
+            .title
+            {
+                position: relative;
+                top: 25%;
+                p
+                {
+                    font-size: 12px;
+
+                    span
+                    {
+                        font-size: 12px;
+                    }
+                }
+            }
+
+            ul
+            {
+                left: 50%;
+                width: 30%;
+                top: -13px;
+
+                li
+                {
+                    a
+                    {
+                        font-size: 10px;
+                        padding: 5px;
+                    }
+                }
+            }
+        }
+
+        main
+        {
+            .showcase
+            {
+                h1
+                {
+                    font-size: 30px;
+                    width: 95%;
+                }
+
+                h3
+                {
+                    font-size: 10px;
+                    width: 90%;
+                }
+
+                .grid-2
+                {
+                    margin-top: 5%;
+                    a
+                    {
+                        font-size: 10px;
+                    }
+                }
+            }
+        }
+
+        section
+        {
+            height: max-content;
+            margin-bottom: 10%;
+
+            h1
+            {
+                width: 95%;
+                text-align: center;
+            }
+            .code-container
+            {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                width: 95%;
+
+                .text
+                {
+                    *
+                    {
+                        margin-bottom: 5%;
+                    }
+                }
+
+                img
+                {
+                    width: 100%;
+                }
+
+                .sub-container
+                {
+                    width: 95%;
+                    i
+                    {
+                        font-size: 8px;
+                        padding: 5px;
+                        margin-top: 5%;
+
+                    }
+
+                    span
+                    {
+                        margin-top: 5%;
+                        font-size: 8px;
+                    }
+                }
+            }
+
+            &:nth-of-type(2)
+            {
+                h1
+                {
+                    margin-bottom: 5%;
+                }
+
+                .code-container
+                {
+                    width: 90%;
+                    img
+                    {
+                        width: 100%;
+                    }
+                }
+            }
+
+            &:nth-of-type(3)
+            {
+                margin-top: 30%;
+                h1
+                {
+                    margin-bottom: 5%;
+                }
+
+                .code-container
+                {
+                    display: flex;
+                    flex-direction: column-reverse;
+                    align-items: center;
+                    justify-content: center;
+                    width: 90%;
+
+                    .text
+                    {
+                        width: 100%;
+                        text-align: center;
+
+                    }
+                    img
+                    {
+                        margin-top: 5%;
+                        width: 100%;
+                    }
+                }
+            }
+
+            &:nth-of-type(4)
+            {
+                margin-top: 40%;
+                h1
+                {
+                    margin-bottom: 5%;
+                    width: 100%;
+                    text-align: center;
+                }
+
+                .code-container
+                {
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    justify-content: center;
+                    width: 90%;
+
+                    .text
+                    {
+                        width: 100%;
+                        text-align: center;
+
+                    }
+                    img
+                    {
+                        margin-top: 5%;
+                        width: 100%;
+                    }
+                }
+            }
+        }
+    }
+}
