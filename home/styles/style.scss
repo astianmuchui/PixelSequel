@@ -307,6 +307,7 @@ body
     {
         header
         {
+            padding-left: 2%;
             .title
             {
                 position: relative;
@@ -476,7 +477,7 @@ body
                 .code-container
                 {
                     display: flex;
-                    flex-direction: column;
+                    flex-direction: column-reverse;
                     align-items: center;
                     justify-content: center;
                     width: 90%;
