@@ -259,7 +259,7 @@ class Model implements PixelSequelORM
         $stmt = self::$connection->query($sql);
         $stmt->execute();
 
-        if ($json = true)
+        if ($json == true)
         {
             return json_encode($stmt->fetchAll());
         }
@@ -281,7 +281,7 @@ class Model implements PixelSequelORM
      * @return array or object
     */
 
-    public function Select(mixed $table, array $rows,mixed $order_by="", mixed $order, mixed $where=null, mixed $where_like=null, int $limit=null): array | object
+    public function Select(mixed $table, array $rows, mixed $order, mixed $where=null, mixed $where_like=null, int $limit=null,mixed $order_by=""): array | object
     {
 
         if ($where == null && $where_like == null)
@@ -445,8 +445,3 @@ class Model implements PixelSequelORM
         self::$Connected = false;
     }
 }
-
-
-
-
-?>
