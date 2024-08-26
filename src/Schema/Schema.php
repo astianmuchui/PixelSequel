@@ -63,9 +63,6 @@ class Schema implements PixelSequelSchema
 
      public static function Exists(string $table): bool
      {
-        echo $_SESSION['uname'];
-        echo $_SESSION['pwd'];
-        echo $_SESSION['host'];
          $sql = "SHOW TABLES LIKE '$table'";
          $stmt = self::$connection->query($sql);
          $stmt->execute(null);
