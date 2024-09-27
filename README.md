@@ -346,5 +346,3 @@ To disconnect from the database, you can call the ```Disconnect``` method on the
 
 # Contributions
 Contributions are welcome. You can contribute by forking the repository and making a pull request. You can also open an issue if you find any bugs or have any feature requests.
-
-### Built with ❤️ by ```Sebastian Muchui```
