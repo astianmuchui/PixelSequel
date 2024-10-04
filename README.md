@@ -4,8 +4,7 @@
 [![wakatime](https://wakatime.com/badge/user/5a50e193-2e98-47bd-9b67-0952bed984cf/project/018cf232-1343-4d6a-8c07-06c12563a3e6.svg)](https://wakatime.com/badge/user/5a50e193-2e98-47bd-9b67-0952bed984cf/project/018cf232-1343-4d6a-8c07-06c12563a3e6)
 
 # Introduction
-
-PixelSequel ORM is a versatile and lightweight Object-Relational Mapping (ORM) solution for PHP. This comprehensive ORM framework seamlessly integrates with PHP applications, providing a powerful set of tools for database connectivity, schema management, and data manipulation. The project comprises two fundamental components: the Model, offering an intuitive interface for executing common database operations such as insertion, updating, querying, and deletion; and the Schema, empowering developers to effortlessly define, create, and modify database structures. With an emphasis on simplicity and efficiency, PixelSequel ORM serves as a valuable resource for PHP developers seeking a reliable ORM solution for their projects.
+This is my portfolio project for ALX Software Engineering program. The project is a simple ORM that allows you to interact with the database using PHP. The project is still in its early stages and is not recommended for use in production environments. The project is open source and contributions are welcome.
 
 
 ## Author
